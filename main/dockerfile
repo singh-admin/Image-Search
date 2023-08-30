@@ -1,0 +1,7 @@
+FROM python:3.6.9-slim-buster
+WORKDIR /main
+COPY req.txt .
+RUN pip3 install --upgrade pip
+RUN pip install -r req.txt
+COPY . .
+CMD ["python", "run.py"]
