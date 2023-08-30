@@ -1,8 +1,12 @@
-
+import requests
+import io
 from flask import Flask, request, Response
 from flask_restx import Api, Resource
 from urllib.parse import quote
-import requests
+from PIL import Image
+
+
+
 app = Flask(__name__)
 
 
@@ -29,7 +33,15 @@ class ImageSearch(Resource):
                 for item in data["items"]:
                     image_url = item["link"]
                     image_data = requests.get(image_url).content
-                    response = Response(image_data, content_type="image/jpeg")
+                    img = Image.open(io.BytesIO(image_data))
+                    # Resize the image
+                    new_size = (370, 370)
+                    img_resized = img.resize(new_size)
+                    # Convert the resized image back to bytes
+                    img_resized_bytes = io.BytesIO()
+                    img_resized.save(img_resized_bytes, format="JPEG")
+                    img_resized_data = img_resized_bytes.getvalue()
+                    response = Response(img_resized_data, content_type="image/jpeg")
                     return response
             return {"status_code": 400, "message": "image not found"}
         except (IOError, OSError) as image_exc:
