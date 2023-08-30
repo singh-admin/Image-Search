@@ -13,7 +13,6 @@ idna
 importlib-metadata
 Jinja2
 jsonschema
-jsonschema-specifications
 MarkupSafe
 Pillow
 pytz
